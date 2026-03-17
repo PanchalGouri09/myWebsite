@@ -1,0 +1,1638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WORLD ON FIRE — The 2026 Crisis</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cinzel:wght@400;700;900&family=Space+Mono:wght@400;700&family=Crimson+Pro:ital,wght@0,300;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blood: #c0392b;
+    --ember: #e74c3c;
+    --gold: #f39c12;
+    --smoke: #1a1a1a;
+    --ash: #2d2d2d;
+    --pale: #e8dcc8;
+    --white: #f5f0e8;
+    --dim: rgba(255,255,255,0.06);
+    --glow-red: 0 0 30px rgba(192,57,43,0.6);
+    --glow-gold: 0 0 30px rgba(243,156,18,0.5);
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: #0a0a0a;
+    color: var(--white);
+    font-family: 'Crimson Pro', serif;
+    overflow-x: hidden;
+    cursor: crosshair;
+  }
+
+  /* ─── NOISE OVERLAY ─── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.4;
+  }
+
+  /* ─── SCROLLBAR ─── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: #0a0a0a; }
+  ::-webkit-scrollbar-thumb { background: var(--blood); }
+
+  /* ─── HERO ─── */
+  #hero {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: radial-gradient(ellipse at 50% 60%, #3d0000 0%, #1a0000 40%, #0a0a0a 100%);
+  }
+
+  .hero-bg-rings {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(192,57,43,0.15);
+    animation: pulse-ring 4s ease-in-out infinite;
+  }
+  .ring:nth-child(1) { width: 200px; height: 200px; animation-delay: 0s; }
+  .ring:nth-child(2) { width: 400px; height: 400px; animation-delay: 0.5s; border-color: rgba(192,57,43,0.1); }
+  .ring:nth-child(3) { width: 650px; height: 650px; animation-delay: 1s; border-color: rgba(192,57,43,0.07); }
+  .ring:nth-child(4) { width: 950px; height: 950px; animation-delay: 1.5s; border-color: rgba(192,57,43,0.04); }
+  .ring:nth-child(5) { width: 1300px; height: 1300px; animation-delay: 2s; border-color: rgba(192,57,43,0.02); }
+
+  @keyframes pulse-ring {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.04); opacity: 0.6; }
+  }
+
+  /* Ember particles */
+  .embers {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .ember {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: var(--gold);
+    border-radius: 50%;
+    box-shadow: 0 0 6px var(--gold);
+    animation: float-ember linear infinite;
+  }
+
+  @keyframes float-ember {
+    0% { transform: translateY(100vh) translateX(0) scale(1); opacity: 1; }
+    70% { opacity: 0.8; }
+    100% { transform: translateY(-20vh) translateX(var(--drift)) scale(0.3); opacity: 0; }
+  }
+
+  .hero-date {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    color: var(--blood);
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fade-up 1s ease forwards 0.3s;
+  }
+
+  .hero-eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.5em;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fade-up 1s ease forwards 0.6s;
+  }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(5rem, 18vw, 14rem);
+    line-height: 0.88;
+    text-align: center;
+    letter-spacing: 0.02em;
+    background: linear-gradient(180deg, #ffffff 0%, #e8dcc8 40%, #c0392b 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: none;
+    position: relative;
+    z-index: 2;
+    opacity: 0;
+    animation: fade-up 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.9s;
+  }
+
+  .hero-title .fire-word {
+    background: linear-gradient(180deg, #f39c12 0%, #e74c3c 50%, #8b0000 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 20px rgba(231,76,60,0.8));
+  }
+
+  .hero-subtitle {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(0.8rem, 2vw, 1.1rem);
+    letter-spacing: 0.4em;
+    color: var(--pale);
+    text-transform: uppercase;
+    margin-top: 2.5rem;
+    opacity: 0;
+    animation: fade-up 1s ease forwards 1.5s;
+  }
+
+  .hero-tagline {
+    font-family: 'Crimson Pro', serif;
+    font-style: italic;
+    font-size: clamp(1rem, 2.5vw, 1.4rem);
+    color: rgba(232,220,200,0.6);
+    margin-top: 1rem;
+    opacity: 0;
+    animation: fade-up 1s ease forwards 1.8s;
+  }
+
+  .scroll-indicator {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    opacity: 0;
+    animation: fade-in 1s ease forwards 2.5s;
+  }
+
+  .scroll-indicator span {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    color: rgba(255,255,255,0.3);
+    text-transform: uppercase;
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 60px;
+    background: linear-gradient(to bottom, var(--blood), transparent);
+    animation: scroll-drop 2s ease-in-out infinite;
+  }
+
+  @keyframes scroll-drop {
+    0% { transform: scaleY(0); transform-origin: top; }
+    50% { transform: scaleY(1); transform-origin: top; }
+    51% { transform: scaleY(1); transform-origin: bottom; }
+    100% { transform: scaleY(0); transform-origin: bottom; }
+  }
+
+  /* ─── TICKER ─── */
+  .ticker-wrap {
+    background: var(--blood);
+    padding: 0.6rem 0;
+    overflow: hidden;
+    position: relative;
+    z-index: 10;
+  }
+
+  .ticker-label {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    background: #8b0000;
+    padding: 0 1.5rem;
+    display: flex;
+    align-items: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    font-weight: 700;
+    z-index: 2;
+    white-space: nowrap;
+  }
+
+  .ticker-track {
+    display: flex;
+    white-space: nowrap;
+    animation: ticker-scroll 35s linear infinite;
+    padding-left: 140px;
+  }
+
+  .ticker-item {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    padding: 0 3rem;
+    opacity: 0.95;
+  }
+
+  .ticker-sep {
+    color: rgba(255,255,255,0.4);
+  }
+
+  @keyframes ticker-scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* ─── SECTIONS ─── */
+  section {
+    padding: 7rem 5vw;
+    position: relative;
+  }
+
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.4em;
+    color: var(--blood);
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, var(--blood), transparent);
+    max-width: 200px;
+  }
+
+  /* ─── INTRO SECTION ─── */
+  #intro {
+    background: linear-gradient(180deg, #0a0a0a 0%, #100505 100%);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    align-items: center;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .intro-quote {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--white);
+  }
+
+  .intro-quote em {
+    color: var(--blood);
+    font-style: normal;
+  }
+
+  .intro-text {
+    font-size: 1.15rem;
+    line-height: 1.9;
+    color: rgba(232,220,200,0.75);
+  }
+
+  .stat-pill {
+    display: inline-block;
+    background: rgba(192,57,43,0.15);
+    border: 1px solid rgba(192,57,43,0.3);
+    padding: 0.3rem 0.8rem;
+    border-radius: 2px;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--ember);
+    margin: 0.25rem;
+  }
+
+  /* ─── TIMELINE ─── */
+  #timeline {
+    background: #0d0d0d;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .timeline-heading {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 8vw, 6rem);
+    letter-spacing: 0.05em;
+    background: linear-gradient(135deg, var(--white) 0%, var(--blood) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 4rem;
+  }
+
+  .timeline-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    position: relative;
+  }
+
+  .timeline-grid::before {
+    content: '';
+    position: absolute;
+    left: 2.5rem;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--blood), transparent);
+  }
+
+  .tl-item {
+    display: grid;
+    grid-template-columns: 5rem 1fr;
+    gap: 2rem;
+    padding: 2.5rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: all 0.6s ease;
+  }
+
+  .tl-item.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .tl-dot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding-top: 0.3rem;
+  }
+
+  .tl-dot-circle {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--blood);
+    box-shadow: var(--glow-red);
+    flex-shrink: 0;
+  }
+
+  .tl-date-txt {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    color: rgba(255,255,255,0.35);
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    letter-spacing: 0.15em;
+  }
+
+  .tl-content-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+
+  .tl-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(1rem, 2.5vw, 1.4rem);
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 0.75rem;
+    line-height: 1.3;
+  }
+
+  .tl-body {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: rgba(232,220,200,0.65);
+  }
+
+  .tl-flag {
+    display: inline-block;
+    font-size: 1.2rem;
+    margin-right: 0.3rem;
+  }
+
+  /* ─── CONFLICT MAP ─── */
+  #map-section {
+    background: linear-gradient(180deg, #0d0d0d 0%, #0a0509 100%);
+    text-align: center;
+    padding: 7rem 5vw;
+  }
+
+  .map-heading {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 7vw, 5rem);
+    letter-spacing: 0.05em;
+    color: var(--white);
+    margin-bottom: 1rem;
+  }
+
+  .map-sub {
+    font-family: 'Crimson Pro', serif;
+    font-style: italic;
+    font-size: 1.2rem;
+    color: rgba(232,220,200,0.5);
+    margin-bottom: 4rem;
+  }
+
+  .map-container {
+    position: relative;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .conflict-map {
+    width: 100%;
+    filter: drop-shadow(0 20px 60px rgba(192,57,43,0.3));
+  }
+
+  /* ─── PLAYERS GRID ─── */
+  #players {
+    background: #080808;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .players-heading {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 8vw, 6rem);
+    letter-spacing: 0.05em;
+    color: var(--white);
+    margin-bottom: 4rem;
+  }
+
+  .players-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2px;
+  }
+
+  .player-card {
+    position: relative;
+    padding: 3rem 2.5rem;
+    background: var(--ash);
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+  }
+
+  .player-card:hover { transform: translateY(-4px); }
+
+  .player-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+
+  .card-usa::before { background: linear-gradient(90deg, #B22234, #3C3B6E, #B22234); }
+  .card-israel::before { background: linear-gradient(90deg, #0038b8, #ffffff, #0038b8); }
+  .card-iran::before { background: linear-gradient(90deg, #239f40, #ffffff, #da0000); }
+  .card-venezuela::before { background: linear-gradient(90deg, #cf142b, #00247d, #cf9e00); }
+
+  .player-flag {
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+    display: block;
+  }
+
+  .player-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    letter-spacing: 0.08em;
+    color: var(--white);
+    margin-bottom: 0.25rem;
+  }
+
+  .player-role {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    color: var(--blood);
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+  }
+
+  .player-desc {
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: rgba(232,220,200,0.6);
+    margin-bottom: 2rem;
+  }
+
+  .player-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .pstat {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.4rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+  }
+
+  .pstat-label { color: rgba(255,255,255,0.35); }
+  .pstat-value { color: var(--pale); }
+
+  .player-bg-num {
+    position: absolute;
+    bottom: -1rem;
+    right: 1rem;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 8rem;
+    color: rgba(255,255,255,0.03);
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  /* ─── STATS BAR ─── */
+  #stats {
+    background: var(--blood);
+    padding: 5rem 5vw;
+  }
+
+  .stats-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 3rem;
+    text-align: center;
+  }
+
+  .stat-block {}
+
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 6vw, 5rem);
+    letter-spacing: 0.02em;
+    color: var(--white);
+    line-height: 1;
+    display: block;
+  }
+
+  .stat-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    color: rgba(255,255,255,0.6);
+    text-transform: uppercase;
+    margin-top: 0.5rem;
+    display: block;
+  }
+
+  /* ─── QUOTE SECTION ─── */
+  #quote-section {
+    background: linear-gradient(180deg, #0a0509 0%, #100505 100%);
+    padding: 10rem 5vw;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  #quote-section::before {
+    content: '"';
+    position: absolute;
+    top: -2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Cinzel', serif;
+    font-size: 25rem;
+    color: rgba(192,57,43,0.05);
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .big-quote {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    font-weight: 700;
+    line-height: 1.5;
+    color: var(--white);
+    max-width: 900px;
+    margin: 0 auto 2rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .big-quote span { color: var(--ember); }
+
+  .quote-attr {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    color: rgba(255,255,255,0.3);
+    text-transform: uppercase;
+  }
+
+  /* ─── CONSEQUENCES ─── */
+  #consequences {
+    background: #080808;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .cons-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-top: 3rem;
+  }
+
+  .cons-card {
+    background: var(--ash);
+    padding: 3rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.6s ease;
+  }
+
+  .cons-card.visible { opacity: 1; transform: translateY(0); }
+
+  .cons-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    display: block;
+  }
+
+  .cons-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 1rem;
+    letter-spacing: 0.05em;
+  }
+
+  .cons-body {
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: rgba(232,220,200,0.6);
+  }
+
+  .cons-number {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.2rem;
+    color: var(--blood);
+    letter-spacing: 0.1em;
+  }
+
+  /* ─── OPERATION EPIC FURY ─── */
+  #operation {
+    background: linear-gradient(135deg, #0d0000 0%, #050010 50%, #0d0000 100%);
+    padding: 10rem 5vw;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .op-bg-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(8rem, 20vw, 18rem);
+    color: rgba(192,57,43,0.04);
+    white-space: nowrap;
+    pointer-events: none;
+    letter-spacing: 0.1em;
+    animation: bg-text-drift 20s ease-in-out infinite;
+  }
+
+  @keyframes bg-text-drift {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); }
+    50% { transform: translate(-50%, -52%) scale(1.02); }
+  }
+
+  .op-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.5em;
+    color: var(--blood);
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+    animation: flicker 3s ease-in-out infinite;
+  }
+
+  @keyframes flicker {
+    0%, 90%, 100% { opacity: 1; }
+    92% { opacity: 0.4; }
+    94% { opacity: 1; }
+    96% { opacity: 0.2; }
+    98% { opacity: 1; }
+  }
+
+  .op-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3.5rem, 12vw, 10rem);
+    letter-spacing: 0.05em;
+    line-height: 0.9;
+    background: linear-gradient(180deg, #ffffff 0%, #e74c3c 60%, #8b0000 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    position: relative;
+    z-index: 1;
+    margin-bottom: 2rem;
+  }
+
+  .op-desc {
+    font-family: 'Crimson Pro', serif;
+    font-size: clamp(1rem, 2.5vw, 1.4rem);
+    color: rgba(232,220,200,0.65);
+    max-width: 700px;
+    margin: 0 auto;
+    line-height: 1.8;
+    position: relative;
+    z-index: 1;
+  }
+
+  .op-cost {
+    display: inline-block;
+    background: rgba(192,57,43,0.2);
+    border: 1px solid var(--blood);
+    padding: 1.5rem 3rem;
+    margin-top: 3rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .op-cost-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3rem;
+    color: var(--gold);
+    letter-spacing: 0.05em;
+    display: block;
+    text-shadow: var(--glow-gold);
+  }
+
+  .op-cost-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+  }
+
+  /* ─── VENEZUELA SECTION ─── */
+  #venezuela {
+    background: #0a0a0a;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .ven-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    align-items: center;
+    margin-top: 3rem;
+  }
+
+  .ven-headline {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+    font-weight: 700;
+    line-height: 1.4;
+    color: var(--white);
+    margin-bottom: 1.5rem;
+  }
+
+  .ven-headline span { color: var(--ember); }
+
+  .ven-text {
+    font-size: 1.05rem;
+    line-height: 1.9;
+    color: rgba(232,220,200,0.65);
+    margin-bottom: 1.5rem;
+  }
+
+  .ven-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .ven-event {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+    padding: 1.2rem;
+    background: var(--ash);
+    border-left: 3px solid var(--blood);
+  }
+
+  .ven-event-date {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    color: var(--blood);
+    white-space: nowrap;
+    padding-top: 0.2rem;
+  }
+
+  .ven-event-text {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: rgba(232,220,200,0.7);
+  }
+
+  /* ─── GLOBAL IMPACT ─── */
+  #global {
+    background: var(--ash);
+    padding: 7rem 5vw;
+  }
+
+  .global-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .global-headline {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 7vw, 5.5rem);
+    letter-spacing: 0.04em;
+    color: var(--white);
+    margin-bottom: 4rem;
+  }
+
+  .impact-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2px;
+  }
+
+  .impact-item {
+    background: var(--smoke);
+    padding: 2.5rem;
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+  }
+
+  .impact-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3rem;
+    color: rgba(192,57,43,0.3);
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .impact-content {}
+  .impact-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--pale);
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.05em;
+  }
+
+  .impact-text {
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: rgba(232,220,200,0.55);
+  }
+
+  /* ─── CLOSING ─── */
+  #closing {
+    background: radial-gradient(ellipse at 50% 0%, #2d0000 0%, #0a0a0a 70%);
+    padding: 12rem 5vw;
+    text-align: center;
+  }
+
+  .closing-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.5em;
+    color: rgba(255,255,255,0.2);
+    text-transform: uppercase;
+    margin-bottom: 3rem;
+  }
+
+  .closing-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(4rem, 14vw, 11rem);
+    letter-spacing: 0.04em;
+    line-height: 0.9;
+    color: var(--white);
+    margin-bottom: 3rem;
+  }
+
+  .closing-sub {
+    font-family: 'Crimson Pro', serif;
+    font-style: italic;
+    font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+    color: rgba(232,220,200,0.5);
+    max-width: 600px;
+    margin: 0 auto 4rem;
+    line-height: 1.7;
+  }
+
+  .closing-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    color: var(--blood);
+    text-transform: uppercase;
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: #000;
+    padding: 2rem 5vw;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+
+  footer span {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    color: rgba(255,255,255,0.2);
+    text-transform: uppercase;
+  }
+
+  /* ─── HELPERS ─── */
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 768px) {
+    #intro, .ven-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .cons-grid { grid-template-columns: 1fr; }
+    .impact-list { grid-template-columns: 1fr; }
+    .players-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    padding: 1.2rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(10,10,10,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(192,57,43,0.15);
+  }
+
+  .nav-brand {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem;
+    letter-spacing: 0.2em;
+    color: var(--white);
+  }
+
+  .nav-brand span { color: var(--blood); }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    color: rgba(255,255,255,0.35);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--ember); }
+
+  .nav-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    color: rgba(255,255,255,0.3);
+    text-transform: uppercase;
+  }
+
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--ember);
+    box-shadow: 0 0 8px var(--ember);
+    animation: blink 1.5s ease-in-out infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.2; }
+  }
+
+  /* Horizontal rule */
+  hr.section-rule {
+    border: none;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    margin: 0;
+  }
+
+  .highlight-box {
+    background: rgba(192,57,43,0.1);
+    border: 1px solid rgba(192,57,43,0.25);
+    padding: 1.5rem 2rem;
+    margin-top: 2rem;
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    color: var(--pale);
+    line-height: 1.7;
+    letter-spacing: 0.03em;
+  }
+
+  .highlight-box strong { color: var(--ember); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">WORLD<span>ON</span>FIRE</div>
+  <ul class="nav-links">
+    <li><a href="#intro">Overview</a></li>
+    <li><a href="#timeline">Timeline</a></li>
+    <li><a href="#players">Nations</a></li>
+    <li><a href="#operation">Operation</a></li>
+    <li><a href="#consequences">Consequences</a></li>
+  </ul>
+  <div class="nav-status">
+    <div class="status-dot"></div>
+    Conflict Active — Day 17
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg-rings">
+    <div class="ring"></div>
+    <div class="ring"></div>
+    <div class="ring"></div>
+    <div class="ring"></div>
+    <div class="ring"></div>
+  </div>
+
+  <div class="embers" id="embers"></div>
+
+  <div class="hero-date">March 17, 2026 · Day 17 of Operation Epic Fury</div>
+  <div class="hero-eyebrow">A Class Presentation on the Global Conflict</div>
+  <h1 class="hero-title">WORLD<br>ON <span class="fire-word">FIRE</span></h1>
+  <p class="hero-subtitle">The Crisis Reshaping Civilization</p>
+  <p class="hero-tagline">America. Israel. Iran. Venezuela. The world holds its breath.</p>
+
+  <div class="scroll-indicator">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker-label">⚡ LIVE UPDATES</div>
+  <div class="ticker-track">
+    <span class="ticker-item">🔴 Strait of Hormuz effectively closed — 19% of global LNG trade disrupted</span>
+    <span class="ticker-sep">///</span>
+    <span class="ticker-item">🔴 Operation Epic Fury costs $900M per day — $3.7B in first 100 hours</span>
+    <span class="ticker-sep">///</span>
+    <span class="ticker-item">🔴 2,300+ killed across the region since Feb 28, 2026</span>
+    <span class="ticker-sep">///</span>
+    <span class="ticker-item">🔴 Nicolás Maduro captured by US forces in January 2026</span>
+    <span class="ticker-sep">///</span>
+    <span class="ticker-item">🔴 Iran's new Supreme Leader: Mojtaba Khamenei — son of the assassinated Ali Khamenei</span>
+    <span class="ticker-sep">///</span>
+    <span class="ticker-item">🔴 Brent crude surpasses $100/barrel — global food crisis looming</span>
+    <span class="ticker-sep">///</span>
+    <span class="ticker-item">🔴 Iran strikes US assets across 9 countries — Gulf states on highest alert</span>
+    <span class="ticker-sep">///</span>
+    <!-- repeat for seamless loop -->
+    <span class="ticker-item">🔴 Strait of Hormuz effectively closed — 19% of global LNG trade disrupted</span>
+    <span class="ticker-sep">///</span>
+    <span class="ticker-item">🔴 Operation Epic Fury costs $900M per day — $3.7B in first 100 hours</span>
+    <span class="ticker-sep">///</span>
+    <span class="ticker-item">🔴 2,300+ killed across the region since Feb 28, 2026</span>
+    <span class="ticker-sep">///</span>
+    <span class="ticker-item">🔴 Nicolás Maduro captured by US forces in January 2026</span>
+    <span class="ticker-sep">///</span>
+    <span class="ticker-item">🔴 Iran's new Supreme Leader: Mojtaba Khamenei — son of the assassinated Ali Khamenei</span>
+    <span class="ticker-sep">///</span>
+    <span class="ticker-item">🔴 Brent crude surpasses $100/barrel — global food crisis looming</span>
+    <span class="ticker-sep">///</span>
+    <span class="ticker-item">🔴 Iran strikes US assets across 9 countries — Gulf states on highest alert</span>
+    <span class="ticker-sep">///</span>
+  </div>
+</div>
+
+<!-- STATS BAR -->
+<div id="stats">
+  <div class="stats-inner">
+    <div class="stat-block">
+      <span class="stat-num">2,300+</span>
+      <span class="stat-label">Lives Lost Since Feb 28</span>
+    </div>
+    <div class="stat-block">
+      <span class="stat-num">$900M</span>
+      <span class="stat-label">Cost Per Day (US)</span>
+    </div>
+    <div class="stat-block">
+      <span class="stat-num">12+</span>
+      <span class="stat-label">Countries Struck</span>
+    </div>
+    <div class="stat-block">
+      <span class="stat-num">19%</span>
+      <span class="stat-label">Global LNG Trade Disrupted</span>
+    </div>
+    <div class="stat-block">
+      <span class="stat-num">$100+</span>
+      <span class="stat-label">Brent Crude ($/barrel)</span>
+    </div>
+  </div>
+</div>
+
+<!-- INTRO -->
+<section>
+<div id="intro">
+  <div>
+    <div class="section-label">Situation Overview</div>
+    <h2 class="intro-quote">
+      The world didn't stumble into this war —<br>
+      <em>it was dragged in, eyes open.</em>
+    </h2>
+    <div class="highlight-box">
+      On <strong>February 28, 2026</strong>, the United States and Israel launched surprise airstrikes across Iran — assassinating Supreme Leader Ali Khamenei in the opening salvo. The world has not been the same since.
+    </div>
+  </div>
+  <div>
+    <p class="intro-text">
+      What began as a targeted military campaign has spiraled into a war of attrition stretching across the entire Middle East. Iran, far from collapsing, has fought back — closing the Strait of Hormuz, striking US allies across nine countries, and elevating a hardliner as its new Supreme Leader.
+    </p>
+    <br>
+    <p class="intro-text">
+      Meanwhile, in January 2026, the US had already made a dramatic move in the Western Hemisphere — capturing Venezuelan President Nicolás Maduro. The message to the world was unmistakable.
+    </p>
+    <br>
+    <div>
+      <span class="stat-pill">Operation Epic Fury</span>
+      <span class="stat-pill">Operation Roaring Lion (Israel)</span>
+      <span class="stat-pill">Venezuela Operation</span>
+      <span class="stat-pill">Strait of Hormuz Crisis</span>
+    </div>
+  </div>
+</div>
+</section>
+
+<hr class="section-rule">
+
+<!-- TIMELINE -->
+<section>
+<div id="timeline">
+  <div class="section-label">Chronology of Conflict</div>
+  <h2 class="timeline-heading">How We<br>Got Here</h2>
+
+  <div class="timeline-grid" id="tl-grid">
+
+    <div class="tl-item">
+      <div class="tl-dot">
+        <div class="tl-dot-circle"></div>
+        <div class="tl-date-txt">June 2025</div>
+      </div>
+      <div>
+        <div class="tl-content-tag">🇮🇱 🇺🇸 The Twelve-Day War</div>
+        <h3 class="tl-title">Israel & US Strike Iran's Nuclear Sites — The "12-Day War"</h3>
+        <p class="tl-body">In a surprise attack, Israel bombs Iran's nuclear and military facilities, assassinating Revolutionary Guard commanders and nuclear scientists. Iran retaliates with 550+ ballistic missiles and 1,000 drones. The US intercepts attacks and bombs three nuclear sites. After 12 days, a US-brokered ceasefire takes hold — but the peace is fragile.</p>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot">
+        <div class="tl-dot-circle"></div>
+        <div class="tl-date-txt">Jan 2026</div>
+      </div>
+      <div>
+        <div class="tl-content-tag">🇺🇸 🇻🇪 Venezuela Gambit</div>
+        <h3 class="tl-title">"The Maduro Raid" — US Seizes Venezuelan President</h3>
+        <p class="tl-body">In a stunning show of force, the United States captures Venezuelan President Nicolás Maduro and his wife. Trump declares the US will "take back" Venezuela's oil. The operation severs Iran-Venezuela economic ties — both nations had used each other to bypass sanctions. Iran sees the writing on the wall.</p>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot">
+        <div class="tl-dot-circle"></div>
+        <div class="tl-date-txt">Jan-Feb 2026</div>
+      </div>
+      <div>
+        <div class="tl-content-tag">🇮🇷 Iran Boils Over</div>
+        <h3 class="tl-title">Mass Protests Erupt — Iran's Streets on Fire</h3>
+        <p class="tl-body">Beginning December 28, 2025, nationwide protests triggered by economic collapse and 60% inflation spread to all 31 Iranian provinces. The regime violently suppresses them — killing thousands. Trump threatens military action. The situation becomes a powder keg, even as nuclear negotiations appear to near a breakthrough.</p>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot">
+        <div class="tl-dot-circle"></div>
+        <div class="tl-date-txt">Feb 25, 2026</div>
+      </div>
+      <div>
+        <div class="tl-content-tag">🕊️ Diplomacy's Last Gasp</div>
+        <h3 class="tl-title">"A Historic Agreement Is Within Reach" — Then Silence</h3>
+        <p class="tl-body">Iran's Foreign Minister announces a deal is "within reach." Diplomacy appears to be working. Three days later, the bombs fall. The US and Israel never intended to wait.</p>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot">
+        <div class="tl-dot-circle" style="background:var(--gold); box-shadow:var(--glow-gold)"></div>
+        <div class="tl-date-txt">Feb 28, 2026</div>
+      </div>
+      <div>
+        <div class="tl-content-tag">💥 OPERATION EPIC FURY — DAY ONE</div>
+        <h3 class="tl-title" style="color:var(--ember)">The US & Israel Launch — Supreme Leader Khamenei Killed</h3>
+        <p class="tl-body">Surprise joint airstrikes at dawn. The opening salvo assassinates Supreme Leader Ali Khamenei along with senior family members and officials. Tehran becomes a ghost town. Cities across Iran brace for sustained bombardment. The Strait of Hormuz becomes a warzone. The world's oil supply hangs in the balance.</p>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot">
+        <div class="tl-dot-circle"></div>
+        <div class="tl-date-txt">Mar 2026</div>
+      </div>
+      <div>
+        <div class="tl-content-tag">🌊 The Escalation Spiral</div>
+        <h3 class="tl-title">Iran Strikes 9 Countries — Hormuz Choked, Oil Hits $100+</h3>
+        <p class="tl-body">Unlike 2025, Iran expands the battlefield — launching missiles and drones at US assets and civilian infrastructure across Bahrain, Kuwait, Qatar, Saudi Arabia, Oman, and the UAE. Nearly 2,000 distinct military events documented. The Strait of Hormuz — through which 19% of global LNG passes — is effectively closed. Brent crude exceeds $100/barrel.</p>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot">
+        <div class="tl-dot-circle"></div>
+        <div class="tl-date-txt">Mar 17, 2026</div>
+      </div>
+      <div>
+        <div class="tl-content-tag">⚡ TODAY — No End in Sight</div>
+        <h3 class="tl-title">Day 17: A War of Attrition With No Off-Ramp</h3>
+        <p class="tl-body">The International Crisis Group calls for an immediate ceasefire. The UN World Food Programme warns of a global food crisis. The Pentagon has spent over $15 billion. Iran's new Supreme Leader, Mojtaba Khamenei, is a hardliner who vows to fight on. The world watches — and waits.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+</section>
+
+<hr class="section-rule">
+
+<!-- PLAYERS -->
+<section>
+<div id="players">
+  <div class="section-label">The Nations</div>
+  <h2 class="players-heading">Four Nations,<br>One Inferno</h2>
+
+  <div class="players-grid">
+
+    <div class="player-card card-usa">
+      <span class="player-flag">🇺🇸</span>
+      <div class="player-name">United States</div>
+      <div class="player-role">Architect of the Offensive</div>
+      <p class="player-desc">Under President Trump, the US has carried out its most aggressive military posture since the Iraq War. Lobbied by both Saudi Arabia and Israel, Trump authorized Operation Epic Fury — a campaign with shifting objectives ranging from nuclear disarmament to full regime change.</p>
+      <div class="player-stats">
+        <div class="pstat"><span class="pstat-label">Daily Cost</span><span class="pstat-value">$900M</span></div>
+        <div class="pstat"><span class="pstat-label">Operation Name</span><span class="pstat-value">Epic Fury</span></div>
+        <div class="pstat"><span class="pstat-label">Stated Goal</span><span class="pstat-value">Denuclearization / Regime Change</span></div>
+        <div class="pstat"><span class="pstat-label">Venezuela Action</span><span class="pstat-value">Maduro Captured Jan 2026</span></div>
+      </div>
+      <div class="player-bg-num">01</div>
+    </div>
+
+    <div class="player-card card-israel">
+      <span class="player-flag">🇮🇱</span>
+      <div class="player-name">Israel</div>
+      <div class="player-role">Co-Belligerent / Driving Force</div>
+      <p class="player-desc">Having launched the 12-Day War in June 2025, Israel has long viewed Iran as an existential threat. Israeli PM Netanyahu and Trump greenlit the Feb 28 offensive together. Israel's codename: Operation Roaring Lion — a deliberate echo of ancient wars.</p>
+      <div class="player-stats">
+        <div class="pstat"><span class="pstat-label">Operation Name</span><span class="pstat-value">Roaring Lion</span></div>
+        <div class="pstat"><span class="pstat-label">Previous Conflict</span><span class="pstat-value">12-Day War (June 2025)</span></div>
+        <div class="pstat"><span class="pstat-label">Role</span><span class="pstat-value">Co-offensive + Air Campaign</span></div>
+        <div class="pstat"><span class="pstat-label">Domestic Pressure</span><span class="pstat-value">High — sirens daily</span></div>
+      </div>
+      <div class="player-bg-num">02</div>
+    </div>
+
+    <div class="player-card card-iran">
+      <span class="player-flag">🇮🇷</span>
+      <div class="player-name">Iran</div>
+      <div class="player-role">The Defiant Target</div>
+      <p class="player-desc">Rather than collapsing, Iran closed ranks. Khamenei's hardliner son was elevated as Supreme Leader. Iran has widened the war to 9 countries, closed the Strait of Hormuz, and vows a campaign of attrition. Its rial has lost half its value. Its people are suffering — but the regime refuses to yield.</p>
+      <div class="player-stats">
+        <div class="pstat"><span class="pstat-label">New Supreme Leader</span><span class="pstat-value">Mojtaba Khamenei</span></div>
+        <div class="pstat"><span class="pstat-label">Inflation (2025)</span><span class="pstat-value">~60%</span></div>
+        <div class="pstat"><span class="pstat-label">Strait of Hormuz</span><span class="pstat-value">Effectively Closed</span></div>
+        <div class="pstat"><span class="pstat-label">Countries Struck</span><span class="pstat-value">9 Nations (US assets)</span></div>
+      </div>
+      <div class="player-bg-num">03</div>
+    </div>
+
+    <div class="player-card card-venezuela">
+      <span class="player-flag">🇻🇪</span>
+      <div class="player-name">Venezuela</div>
+      <div class="player-role">The Fallen Ally</div>
+      <p class="player-desc">Venezuela and Iran had built an economic lifeline out of mutual sanctions — trading oil and drones through shadow fleets. When the US seized Maduro in January 2026, it didn't just topple a government — it cut Iran's economic artery and sent a chilling message to every US adversary on earth.</p>
+      <div class="player-stats">
+        <div class="pstat"><span class="pstat-label">Maduro Status</span><span class="pstat-value">Captured — Jan 2026</span></div>
+        <div class="pstat"><span class="pstat-label">Iran-Ven Ties</span><span class="pstat-value">Oil, Drones, Shadow Fleet</span></div>
+        <div class="pstat"><span class="pstat-label">Key Ship Seized</span><span class="pstat-value">MV Bella 1 (Marinera)</span></div>
+        <div class="pstat"><span class="pstat-label">US Goal</span><span class="pstat-value">"Take back" Venezuelan oil</span></div>
+      </div>
+      <div class="player-bg-num">04</div>
+    </div>
+
+  </div>
+</div>
+</section>
+
+<!-- OPERATION -->
+<section id="operation">
+  <div class="op-bg-text">EPIC FURY</div>
+  <div class="op-label">■ Classified Designation · Active Operation</div>
+  <h2 class="op-title">Operation<br>Epic Fury</h2>
+  <p class="op-desc">
+    Secretary Hegseth called it "straightforward." It is anything but. 
+    The most expensive and expansive US military operation since Iraq, 
+    Operation Epic Fury has no defined endpoint, no negotiated off-ramp, 
+    and a price tag that grows by the hour.
+  </p>
+  <div class="op-cost">
+    <span class="op-cost-num">$3,700,000,000</span>
+    <span class="op-cost-label">Cost in First 100 Hours · Mostly Unbudgeted</span>
+  </div>
+</section>
+
+<!-- VENEZUELA DEEP DIVE -->
+<section>
+<div id="venezuela">
+  <div class="section-label">Western Hemisphere</div>
+  <div class="ven-grid">
+    <div>
+      <h2 class="ven-headline">The Move<br>No One Saw Coming:<br><span>Maduro's Capture</span></h2>
+      <p class="ven-text">
+        In January 2026, the United States executed a covert operation that stunned the world — seizing Venezuelan President Nicolás Maduro and his wife. Trump declared America would "take back" Venezuela's oil reserves, the largest proven reserves on Earth.
+      </p>
+      <p class="ven-text">
+        The move wasn't just about Venezuela. It was a message to Iran, Russia, and China: no alliance with America's enemies is safe. It severed Iran's most important economic lifeline — a shadow network of oil tankers, drone shipments, and sanctioned finance.
+      </p>
+    </div>
+    <div class="ven-timeline">
+      <div class="ven-event">
+        <span class="ven-event-date">2020–2025</span>
+        <span class="ven-event-text">Venezuela & Iran build shadow fleet to bypass US sanctions — trading oil, drones, and technology. The MV Bella 1 ("Marinera") becomes the symbol of this axis.</span>
+      </div>
+      <div class="ven-event">
+        <span class="ven-event-date">Jan 2026</span>
+        <span class="ven-event-text">US forces capture Maduro. MV Bella 1 seized with UK support. Trump calls it a blow to Hezbollah's Latin American drug trafficking income.</span>
+      </div>
+      <div class="ven-event">
+        <span class="ven-event-date">Feb 2026</span>
+        <span class="ven-event-text">Iran-Venezuela economic corridor collapses. Iran loses key oil revenue at the worst possible moment — just before Operation Epic Fury begins.</span>
+      </div>
+      <div class="ven-event">
+        <span class="ven-event-date">Mar 2026</span>
+        <span class="ven-event-text">Analysts compare Venezuela operation to Iran war — noting the swift, clean removal of Maduro versus the grinding, costly war of attrition with Tehran.</span>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<hr class="section-rule">
+
+<!-- CONSEQUENCES -->
+<section>
+<div id="consequences">
+  <div class="section-label">The Fallout</div>
+  <h2 class="timeline-heading">What's at Stake<br>for the World</h2>
+
+  <div class="cons-grid" id="cons-grid">
+
+    <div class="cons-card">
+      <span class="cons-number">01</span>
+      <span class="cons-icon">⚡</span>
+      <h3 class="cons-title">The Energy Crisis</h3>
+      <p class="cons-body">The Strait of Hormuz — through which 19% of global LNG and massive oil flows — is effectively closed. Brent crude has surpassed $100/barrel. Energy prices are surging across Europe, Asia, and the developing world.</p>
+    </div>
+
+    <div class="cons-card">
+      <span class="cons-number">02</span>
+      <span class="cons-icon">🌾</span>
+      <h3 class="cons-title">The Food Security Threat</h3>
+      <p class="cons-body">50% of global urea and sulfur exports — critical fertilizers — transit the Strait. The UN World Food Programme warns of a global food crisis echoing 2022. Rising fertilizer prices mean rising food prices everywhere on Earth.</p>
+    </div>
+
+    <div class="cons-card">
+      <span class="cons-number">03</span>
+      <span class="cons-icon">🏛️</span>
+      <h3 class="cons-title">Cultural Heritage Destroyed</h3>
+      <p class="cons-body">UNESCO World Heritage Sites have been damaged in the strikes. The ancient Golestan Palace — a monument of Persian civilization — was struck on March 2. The Azadi Sport Complex was bombed on March 5. History is burning.</p>
+    </div>
+
+    <div class="cons-card">
+      <span class="cons-number">04</span>
+      <span class="cons-icon">✈️</span>
+      <h3 class="cons-title">Global Aviation Disruption</h3>
+      <p class="cons-body">Iran's airspace is closed. Bahrain, Iraq, Kuwait, Qatar, Syria, and the UAE have closed their airspace. Hundreds of international flights are being rerouted daily, adding costs and hours to journeys across the globe.</p>
+    </div>
+
+    <div class="cons-card">
+      <span class="cons-number">05</span>
+      <span class="cons-icon">💰</span>
+      <h3 class="cons-title">The Economic Shockwave</h3>
+      <p class="cons-body">The World Bank had already projected Iran's economy shrinking through 2026. Now the global economy faces inflationary pressure, slowed growth, and supply chain disruption on a scale not seen since the COVID-19 pandemic.</p>
+    </div>
+
+    <div class="cons-card">
+      <span class="cons-number">06</span>
+      <span class="cons-icon">⚖️</span>
+      <h3 class="cons-title">The Legal & Moral Reckoning</h3>
+      <p class="cons-body">The International Commission of Jurists has called the Israeli-US strikes a violation of international law. UNESCO has issued statements of deep concern. Russia and most of the Global South have condemned the campaign. The world is divided.</p>
+    </div>
+
+  </div>
+</div>
+</section>
+
+<!-- QUOTE SECTION -->
+<section id="quote-section">
+  <div class="big-quote">
+    "The world tends to be the largest source of warning before a catastrophe — <span>and the last to be listened to.</span>"
+  </div>
+  <p class="quote-attr">— The silence before Operation Epic Fury</p>
+</section>
+
+<!-- GLOBAL IMPACT -->
+<section id="global">
+  <div class="global-inner">
+    <div class="section-label">Ripple Effects</div>
+    <h2 class="global-headline">The War<br>Beyond the War</h2>
+
+    <div class="impact-list">
+      <div class="impact-item">
+        <div class="impact-num">I</div>
+        <div class="impact-content">
+          <div class="impact-title">Russia & China Watch Closely</div>
+          <p class="impact-text">Russia has condemned the strikes as a violation of international law. China — the world's largest crude oil importer at a record 11.6M barrels/day in 2025 — faces severe supply disruption and is stockpiling aggressively.</p>
+        </div>
+      </div>
+      <div class="impact-item">
+        <div class="impact-num">II</div>
+        <div class="impact-content">
+          <div class="impact-title">The Gulf States Caught in the Middle</div>
+          <p class="impact-text">Saudi Arabia, which lobbied Trump to attack Iran, now faces Iranian missile strikes on its own soil. The Gulf monarchies are simultaneously allies of the US offensive and targets of Iranian retaliation.</p>
+        </div>
+      </div>
+      <div class="impact-item">
+        <div class="impact-num">III</div>
+        <div class="impact-content">
+          <div class="impact-title">Air Defense Running Low</div>
+          <p class="impact-text">Iran's strategy is calculated: force the depletion of US and Israeli ballistic missile interceptors. Once those stocks run low — the calculus of the entire war shifts dramatically.</p>
+        </div>
+      </div>
+      <div class="impact-item">
+        <div class="impact-num">IV</div>
+        <div class="impact-content">
+          <div class="impact-title">Diplomacy's Window Is Closing</div>
+          <p class="impact-text">The International Crisis Group calls for an immediate ceasefire. But with Khamenei dead and a hardliner in his place, Iran has no face-saving path to a deal — and the US has offered none.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CLOSING -->
+<section id="closing">
+  <div class="closing-label">Conclusion · Class Presentation · March 2026</div>
+  <h2 class="closing-title">THE WORLD<br>IS WATCHING</h2>
+  <p class="closing-sub">
+    History doesn't announce itself. It arrives — in the form of missiles at dawn, 
+    a captured president, a burning strait, and a world holding its breath 
+    wondering where it goes from here.
+  </p>
+  <div class="closing-tag">Presented for Class Discussion · Sources: Wikipedia, Al Jazeera, CSIS, Crisis Group, Columbia Energy Policy · March 17, 2026</div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span>World On Fire — Class Presentation 2026</span>
+  <span>All data current as of March 17, 2026</span>
+  <span>For educational purposes</span>
+</footer>
+
+<script>
+  // Generate ember particles
+  const embersContainer = document.getElementById('embers');
+  for (let i = 0; i < 40; i++) {
+    const ember = document.createElement('div');
+    ember.className = 'ember';
+    const left = Math.random() * 100;
+    const duration = 4 + Math.random() * 8;
+    const delay = Math.random() * 8;
+    const drift = (Math.random() - 0.5) * 200;
+    const size = 1 + Math.random() * 3;
+    ember.style.cssText = `
+      left: ${left}%;
+      bottom: -10px;
+      width: ${size}px;
+      height: ${size}px;
+      --drift: ${drift}px;
+      animation-duration: ${duration}s;
+      animation-delay: -${delay}s;
+      opacity: ${0.4 + Math.random() * 0.6};
+      background: ${Math.random() > 0.5 ? '#f39c12' : '#e74c3c'};
+    `;
+    embersContainer.appendChild(ember);
+  }
+
+  // Scroll-triggered animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.tl-item, .cons-card').forEach(el => observer.observe(el));
+
+  // Stagger timeline items
+  document.querySelectorAll('.tl-item').forEach((item, i) => {
+    item.style.transitionDelay = `${i * 0.1}s`;
+  });
+
+  // Stagger cons cards
+  document.querySelectorAll('.cons-card').forEach((card, i) => {
+    card.style.transitionDelay = `${i * 0.1}s`;
+  });
+
+  // Parallax subtle on hero title
+  window.addEventListener('scroll', () => {
+    const scrolled = window.scrollY;
+    const hero = document.getElementById('hero');
+    if (hero && scrolled < window.innerHeight) {
+      hero.style.transform = `translateY(${scrolled * 0.3}px)`;
+    }
+  });
+</script>
+</body>
+</html>
